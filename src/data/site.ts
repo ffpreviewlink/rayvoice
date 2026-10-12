@@ -9,9 +9,9 @@ export const site = {
   /** Mailto used by every "Free Custom Demo" call to action on the original site. */
   demoMailto: "mailto:ray@thatsraysvoice.com?subject=Hey%20Ray%2C%20I'd%20like%20to%20request%20a%20custom%20demo",
   tagline: 'Scripts, Stories, and a Dash of Ray.',
-  /** Default social sharing image (public/images/og-image.jpg, 1200x630). Pages may override it. */
+  /** Default social sharing image (public/images/og-image-v2.jpg, 1200x630). Pages may override it. */
   ogImage: {
-    path: '/images/og-image.jpg',
+    path: '/images/og-image-v2.jpg',
     width: 1200,
     height: 630,
     type: 'image/jpeg',
