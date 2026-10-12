@@ -1,0 +1,314 @@
+---
+import AudioPlayer from '../components/AudioPlayer.astro';
+import Button from '../components/Button.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import WaveDivider from '../components/WaveDivider.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { audiobooks, dominosVideos, showreels, videoPlaylist } from '../data/media';
+import poster1 from '../assets/images/dominos-poster-1.jpg';
+import poster2 from '../assets/images/dominos-poster-2.jpg';
+import poster3 from '../assets/images/dominos-poster-3.jpg';
+import poster4 from '../assets/images/dominos-poster-4.jpg';
+import poster5 from '../assets/images/dominos-poster-5.jpg';
+import poster6 from '../assets/images/dominos-poster-6.jpg';
+
+const posters = [poster1, poster2, poster3, poster4, poster5, poster6];
+const pad = (n: number) => String(n).padStart(2, '0');
+const index = [
+  ...showreels.map((s) => ({ href: `#${s.id}`, label: s.language })),
+  { href: '#audiobooks', label: 'Audiobooks' },
+  { href: '#dominos', label: 'Domino’s Bulgaria' },
+];
+---
+
+<BaseLayout
+  title="Showreels"
+  description="Listen to Ray Rodrigues’ voiceover showreels in English, Bulgarian and Italian, plus audiobook samples and his work with Domino’s Bulgaria."
+  footerFrom="var(--ivory-100)"
+>
+  <header class="intro">
+    <div class="container intro__inner">
+      <h1 class="intro__title">VoiceOver Showreels<span class="colon">:</span></h1>
+      <nav class="intro__index" aria-label="On this page">
+        <p class="label">Jump to</p>
+        <ul>
+          {index.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  {
+    showreels.map((reel) => (
+      <section class="lang" id={reel.id} aria-labelledby={`${reel.id}-title`}>
+        <div class="container lang__grid">
+          <div class="lang__rail">
+            <p class="label lang__count">{reel.tracks.length} demos</p>
+            <h2 id={`${reel.id}-title`} class="lang__title">{reel.heading}</h2>
+            <Button href={reel.downloadAll.href} variant="secondary" icon="download" external>{reel.downloadAll.label}</Button>
+          </div>
+          <ul class="lang__tracks">
+            {
+              reel.tracks.map((track) => (
+                <li data-reveal>
+                  <AudioPlayer name={track.name} tone={track.tone} language={reel.language} src={track.src} durationMs={track.durationMs} />
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <WaveDivider from="var(--ivory-100)" to="var(--navy-900)" />
+  <section class="books on-dark" id="audiobooks" aria-labelledby="books-title">
+    <div class="container">
+      <h2 id="books-title" class="books__title">Audiobooks Showreels<span class="colon">:</span></h2>
+      <div class="books__cols">
+        {
+          audiobooks.map((group) => (
+            <div class="books__col">
+              <h3 class="books__lang">{group.heading}</h3>
+              <ul class="books__tracks">
+                {
+                  group.tracks.map((track, i) => (
+                    <li>
+                      <AudioPlayer name={track.name} language={group.language} src={track.src} durationMs={track.durationMs} accessibleName={`${track.name} (${group.heading})`} compact index={pad(i + 1)} />
+                    </li>
+                  ))
+                }
+              </ul>
+              <Button href={group.downloadAll.href} variant="secondary" icon="download" external>{group.downloadAll.label}</Button>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <WaveDivider from="var(--navy-900)" to="var(--ivory-100)" />
+
+  <section class="work" id="dominos" aria-labelledby="work-title">
+    <div class="container">
+      <h2 id="work-title" class="work__title">My Work w/ Domino’s Bulgaria<span class="colon">:</span></h2>
+      <ul class="work__grid">
+        {
+          dominosVideos.map((video, i) => (
+            <li data-reveal style={`--reveal-delay:${(i % 3) * 80}ms`}>
+              <VideoEmbed playlist={videoPlaylist(video.id)} poster={posters[i]} durationSeconds={video.durationSeconds} label={`Domino’s Bulgaria video ${i + 1} of ${dominosVideos.length}`} />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="work__note">PS. You can always direct me via Session Link Pro, Teams, Zoom, etc. and I will record in studio quality at my end.</p>
+    </div>
+  </section>
+
+  <section class="closing" aria-labelledby="closing-title">
+    <div class="container closing__inner" data-reveal>
+      <h2 id="closing-title" class="closing__title">Heard something you like? <span class="accent">Let’s bring your next project to life!</span></h2>
+      <Button href="/contacts" size="l" icon="arrow-right">Get In Touch for a custom demo!</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Page intro */
+  .intro {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--space-l);
+  }
+  .intro__inner {
+    display: grid;
+    gap: var(--space-m);
+    align-items: end;
+  }
+  .intro__title {
+    font-size: var(--fs-h1);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+  }
+  .intro__index ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+  .intro__index .label {
+    margin-bottom: 0.15rem;
+  }
+  .intro__index a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 600;
+    text-decoration-color: var(--coral-600);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+  .intro__index a:hover {
+    text-decoration-thickness: 4px;
+  }
+  @media (min-width: 64em) {
+    .intro__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--space-xl);
+    }
+  }
+
+  /* Voiceover showreels: heading rail + track grid */
+  .lang {
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--line-strong);
+  }
+  .lang:first-of-type {
+    border-top: 2px solid var(--ink);
+  }
+  .lang:last-of-type {
+    padding-bottom: var(--space-section);
+  }
+  .lang__grid {
+    display: grid;
+    gap: var(--space-m);
+    align-items: start;
+  }
+  .lang__rail {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-xs);
+  }
+  .lang__title {
+    font-size: var(--fs-h2);
+    line-height: 1;
+    margin-bottom: var(--space-2xs);
+  }
+  .lang__count {
+    color: var(--accent-text);
+  }
+  .lang__tracks {
+    display: grid;
+    gap: 0.75rem;
+  }
+  @media (min-width: 48em) {
+    .lang__tracks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .lang {
+      padding-block: var(--space-xl);
+    }
+    .lang__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(1rem, 0.4rem + 2vw, 2rem);
+    }
+    .lang__rail {
+      grid-column: 1 / span 4;
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+    .lang__tracks {
+      grid-column: 5 / -1;
+    }
+  }
+
+  /* Audiobooks */
+  .books {
+    padding-block: var(--space-xl) var(--space-l);
+  }
+  .books__title {
+    font-size: var(--fs-h1);
+    line-height: 1;
+    margin-bottom: var(--space-l);
+  }
+  .books__cols {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .books__col {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--space-s);
+  }
+  .books__col > :global(.player),
+  .books__tracks {
+    width: 100%;
+  }
+  .books__lang {
+    width: 100%;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line-strong);
+    font-size: var(--fs-h3);
+    color: var(--text);
+  }
+  .books__tracks {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .books__col :global(.btn) {
+    margin-top: var(--space-2xs);
+  }
+  @media (min-width: 64em) {
+    .books__cols {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    }
+  }
+
+  /* Domino's Bulgaria */
+  .work {
+    padding-block: var(--space-l) var(--space-xl);
+  }
+  .work__title {
+    font-size: var(--fs-h1);
+    line-height: 1;
+    max-width: 14ch;
+    margin-bottom: var(--space-l);
+  }
+  .work__grid {
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 40em) {
+    .work__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .work__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-m);
+    }
+  }
+  .work__note {
+    margin-top: var(--space-l);
+    max-width: 44rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--coral-500);
+    font-family: var(--font-serif);
+    font-size: var(--fs-quote);
+    line-height: 1.25;
+  }
+
+  /* Closing call to action */
+  .closing {
+    padding-block: var(--space-xl) var(--space-section);
+    background: var(--ivory-100);
+  }
+  .closing__inner {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+  .closing__title {
+    font-size: var(--fs-h2);
+    line-height: 1.04;
+    max-width: 22ch;
+  }
+  @media (min-width: 64em) {
+    .closing__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      column-gap: var(--space-xl);
+    }
+  }
+</style>

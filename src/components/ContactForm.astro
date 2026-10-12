@@ -1,0 +1,670 @@
+---
+import { site } from '../data/site';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+/**
+ * The contact form keeps every field, label and message of the original Squarespace form.
+ * Delivery: if PUBLIC_FORM_ENDPOINT is set, the form POSTs there (multipart, JSON reply).
+ * Otherwise it falls back to opening the visitor's email client with the inquiry prefilled.
+ */
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+
+const workTypes = ['One-Off Project With add-ons', 'One-Off Project Without add-ons', 'Retainer Plan', 'General Inquiry'];
+const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'];
+---
+
+<div class="contact-form" data-contact data-endpoint={endpoint} data-email={site.email}>
+  <div class="form-success" data-success tabindex="-1" role="status" hidden>
+    <h2 class="form-success__title"><em>Thank you for reaching out! 🎙️</em></h2>
+    <p>Your message has been received, and I’ll get back to you within <strong>24 hours</strong>. If your request is urgent, feel free to email me at <strong>{site.email}</strong></p>
+  </div>
+
+  <div class="form-fallback" data-fallback tabindex="-1" role="status" hidden>
+    <h2 class="form-success__title"><em>Almost there!</em></h2>
+    <p>
+      Your email app should now open with your inquiry ready to send. If it doesn’t, write to me directly at
+      <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+    <p data-fallback-files hidden>Email links can’t carry attachments, so please attach your script or reference files to that email.</p>
+  </div>
+
+  <form
+    class="form"
+    method="post"
+    action={endpoint || `mailto:${site.email}`}
+    enctype={endpoint ? 'multipart/form-data' : 'text/plain'}
+    novalidate
+    data-form
+  >
+    <div class="form-errors" data-errors role="alert" tabindex="-1" hidden>
+      <p class="form-errors__title"><Icon name="alert" size={20} /> Please check the following:</p>
+      <ul data-error-list></ul>
+    </div>
+
+    <fieldset class="field field--group" data-field="name">
+      <legend class="field__label">Name <span class="field__req">(required)</span></legend>
+      <div class="field__row">
+        <div class="field">
+          <label class="field__sub" for="first-name">First Name <span class="field__req">(required)</span></label>
+          <input id="first-name" name="First Name" type="text" autocomplete="given-name" required aria-describedby="err-first-name" />
+          <p class="field__error" id="err-first-name" data-error hidden></p>
+        </div>
+        <div class="field">
+          <label class="field__sub" for="last-name">Last Name <span class="field__req">(required)</span></label>
+          <input id="last-name" name="Last Name" type="text" autocomplete="family-name" required aria-describedby="err-last-name" />
+          <p class="field__error" id="err-last-name" data-error hidden></p>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label class="field__label" for="company">Company Name (Optional)</label>
+      <input id="company" name="Company Name" type="text" autocomplete="organization" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="email">Email <span class="field__req">(required)</span></label>
+      <input id="email" name="Email" type="email" autocomplete="email" required aria-describedby="err-email" />
+      <p class="field__error" id="err-email" data-error hidden></p>
+    </div>
+
+    <fieldset class="field field--group" data-field="work-type" aria-describedby="err-work-type">
+      <legend class="field__label">What Type of Work Are You Interested In? <span class="field__req">(required)</span></legend>
+      <div class="choices">
+        {
+          workTypes.map((label) => (
+            <label class="choice">
+              <input type="checkbox" name="Type of Work" value={label} data-work-type />
+              <span class="choice__box"><Icon name="check" size={14} /></span>
+              <span class="choice__text">{label}</span>
+            </label>
+          ))
+        }
+      </div>
+      <p class="field__error" id="err-work-type" data-error hidden></p>
+    </fieldset>
+
+    <div class="field">
+      <label class="field__label" for="details">Project Details (Tell me about your needs!) <span class="field__req">(required)</span></label>
+      <textarea id="details" name="Project Details" rows="6" required aria-describedby="err-details"></textarea>
+      <p class="field__error" id="err-details" data-error hidden></p>
+    </div>
+
+    <fieldset class="field field--group">
+      <legend class="field__label">Preferred Contact Method (Optional)</legend>
+      <div class="choices">
+        {
+          contactMethods.map((label) => (
+            <label class="choice">
+              <input type="checkbox" name="Preferred Contact Method" value={label} />
+              <span class="choice__box"><Icon name="check" size={14} /></span>
+              <span class="choice__text">{label}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label class="field__label" for="other">Fill in if You Selected Other</label>
+      <input id="other" name="Other Contact Method" type="text" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="files" id="files-label">Attachment Upload (If Needed)</label>
+      <p class="field__hint" id="files-hint">
+        Have a script, reference audio, or specific guidelines for your project? Upload them here to help me understand your needs better. If you prefer, you can also email attachments to {site.email}
+      </p>
+      <div class="dropzone" data-dropzone>
+        <input id="files" name="Attachments" type="file" multiple aria-describedby="files-hint err-files" data-files />
+        <span class="dropzone__icon"><Icon name="plus" size={22} /></span>
+        <span class="dropzone__text">Add a File</span>
+      </div>
+      <ul class="filelist" data-filelist aria-live="polite"></ul>
+      <p class="field__error" id="err-files" data-error hidden></p>
+    </div>
+
+    <!-- Spam trap: real visitors never see or fill this -->
+    <div class="hp" aria-hidden="true">
+      <label>Leave this field empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <input type="hidden" name="_subject" value="New inquiry from thatsraysvoice.com" />
+
+    <div class="form__submit">
+      <Button type="submit" size="l" data-submit>Send Inquiry &amp; Get an answer in less than a day!</Button>
+      <p class="form__status" data-status role="status" aria-live="polite"></p>
+    </div>
+  </form>
+</div>
+
+<style>
+  .form {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .field--group {
+    min-inline-size: 0;
+  }
+  .field__label {
+    padding: 0;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    line-height: 1.35;
+  }
+  .field__sub {
+    font-size: var(--fs-small);
+    font-weight: 500;
+  }
+  .field__req {
+    font-weight: 400;
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+  .field__hint {
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+    max-width: 44rem;
+  }
+  .field__row {
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 30em) {
+    .field__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    background: var(--ivory-50);
+    color: var(--ink);
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      box-shadow var(--dur-fast) var(--ease);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+    line-height: 1.5;
+  }
+  input[type='text']:hover,
+  input[type='email']:hover,
+  textarea:hover {
+    border-color: var(--ink);
+  }
+  input[type='text']:focus-visible,
+  input[type='email']:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--coral-500);
+    outline-offset: 1px;
+    border-color: var(--ink);
+  }
+  input[aria-invalid='true'],
+  textarea[aria-invalid='true'] {
+    border-color: var(--coral-700);
+    background: #fff6f4;
+  }
+
+  .field__error {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--coral-700);
+  }
+  .field__error::before {
+    content: '!';
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--coral-700);
+    color: #fff;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+  .field__error[hidden] {
+    display: none;
+  }
+
+  /* Checkbox choices */
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .choice {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 3rem;
+    padding: 0.5rem 1rem 0.5rem 0.75rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    background: var(--ivory-50);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
+  }
+  .choice:hover {
+    border-color: var(--ink);
+  }
+  .choice input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+  .choice__box {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.35rem;
+    height: 1.35rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    background: var(--ivory-50);
+    color: transparent;
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+  .choice__text {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+  .choice:has(input:checked) {
+    border-color: var(--ink);
+    background: var(--ivory-200);
+  }
+  .choice:has(input:checked) .choice__box {
+    background: var(--coral-500);
+    border-color: var(--ink);
+    color: var(--navy-900);
+  }
+  .choice:has(input:focus-visible) {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
+  .field--group[aria-invalid='true'] .choice {
+    border-color: var(--coral-700);
+  }
+
+  /* File dropzone */
+  .dropzone {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: 1.75rem 1rem;
+    border: 1.5px dashed var(--ink);
+    border-radius: var(--radius-s);
+    background: var(--ivory-50);
+    text-align: center;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .dropzone:hover,
+  .dropzone.is-over {
+    background: var(--ivory-200);
+  }
+  .dropzone:focus-within {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+  .dropzone input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .dropzone__icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--ivory-200);
+  }
+  .dropzone__text {
+    font-weight: 600;
+  }
+  .filelist {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .filelist li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.4rem 0.4rem 0.4rem 0.9rem;
+    background: var(--ivory-200);
+    border-radius: var(--radius-s);
+    font-size: var(--fs-small);
+  }
+  .filelist__name {
+    overflow-wrap: anywhere;
+  }
+  .filelist button {
+    flex: none;
+    min-height: 2.5rem;
+    padding: 0 0.75rem;
+    border: 0;
+    background: transparent;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form__submit {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+  }
+  .form__submit :global(.btn) {
+    max-width: 100%;
+  }
+  @media (max-width: 36em) {
+    .form__submit {
+      justify-items: stretch;
+    }
+  }
+  .form__status {
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+  .form__status:empty {
+    display: none;
+  }
+
+  .form-errors {
+    padding: 1rem 1.25rem;
+    border: 1.5px solid var(--coral-700);
+    border-left-width: 6px;
+    background: #fff6f4;
+    border-radius: var(--radius-s);
+  }
+  .form-errors[hidden] {
+    display: none;
+  }
+  .form-errors__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--coral-700);
+    margin-bottom: 0.4rem;
+  }
+  .form-errors ul {
+    display: grid;
+    gap: 0.15rem;
+    padding-left: 1.75rem;
+    list-style: disc;
+  }
+  .form-errors a {
+    font-weight: 600;
+  }
+
+  .form-success,
+  .form-fallback {
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-l);
+    border: 1.5px solid var(--ink);
+    background: var(--ivory-50);
+    box-shadow: 8px 8px 0 var(--coral-500);
+    border-radius: var(--radius-s);
+  }
+  .form-success[hidden],
+  .form-fallback[hidden],
+  [data-fallback-files][hidden] {
+    display: none;
+  }
+  .form-success__title {
+    font-size: var(--fs-h3);
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-contact]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-form]')!;
+    const endpoint = root.dataset.endpoint ?? '';
+    const email = root.dataset.email ?? '';
+    const summary = root.querySelector<HTMLElement>('[data-errors]')!;
+    const summaryList = summary.querySelector<HTMLElement>('[data-error-list]')!;
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+    const success = root.querySelector<HTMLElement>('[data-success]')!;
+    const fallback = root.querySelector<HTMLElement>('[data-fallback]')!;
+    const fallbackFiles = root.querySelector<HTMLElement>('[data-fallback-files]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const fileInput = form.querySelector<HTMLInputElement>('[data-files]')!;
+    const fileList = form.querySelector<HTMLElement>('[data-filelist]')!;
+    const dropzone = form.querySelector<HTMLElement>('[data-dropzone]')!;
+    const MAX_FILES = 5;
+
+    // ---------- helpers ----------
+    const errorEl = (id: string) => form.querySelector<HTMLElement>(`#err-${id}`)!;
+    const setError = (id: string, message: string, control: HTMLElement | null) => {
+      const el = errorEl(id);
+      el.textContent = message;
+      el.hidden = false;
+      control?.setAttribute('aria-invalid', 'true');
+    };
+    const clearError = (id: string, control: HTMLElement | null) => {
+      const el = errorEl(id);
+      el.textContent = '';
+      el.hidden = true;
+      control?.removeAttribute('aria-invalid');
+    };
+
+    type Check = { id: string; label: string; control: HTMLElement | null; focus: HTMLElement; message: string | null };
+
+    const validate = (): Check[] => {
+      const get = (id: string) => form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)!;
+      const first = get('first-name');
+      const last = get('last-name');
+      const mail = get('email');
+      const details = get('details');
+      const workGroup = form.querySelector<HTMLElement>('[data-field="work-type"]')!;
+      const workChecked = form.querySelectorAll('[data-work-type]:checked').length > 0;
+
+      return [
+        { id: 'first-name', label: 'First Name', control: first, focus: first, message: first.value.trim() ? null : 'Please enter your first name.' },
+        { id: 'last-name', label: 'Last Name', control: last, focus: last, message: last.value.trim() ? null : 'Please enter your last name.' },
+        {
+          id: 'email',
+          label: 'Email',
+          control: mail,
+          focus: mail,
+          message: !mail.value.trim() ? 'Please enter your email address.' : !mail.validity.valid ? 'Please enter a valid email address, like name@example.com.' : null,
+        },
+        {
+          id: 'work-type',
+          label: 'Type of work',
+          control: workGroup,
+          focus: form.querySelector<HTMLElement>('[data-work-type]')!,
+          message: workChecked ? null : 'Please choose at least one type of work.',
+        },
+        { id: 'details', label: 'Project Details', control: details, focus: details, message: details.value.trim() ? null : 'Please tell me a little about your project.' },
+        {
+          id: 'files',
+          label: 'Attachments',
+          control: fileInput,
+          focus: fileInput,
+          message: (fileInput.files?.length ?? 0) > MAX_FILES ? `Please attach up to ${MAX_FILES} files.` : null,
+        },
+      ];
+    };
+
+    const showErrors = (checks: Check[]) => {
+      const failed = checks.filter((c) => c.message);
+      checks.forEach((c) => (c.message ? setError(c.id, c.message, c.control) : clearError(c.id, c.control)));
+      summaryList.replaceChildren(
+        ...failed.map((c) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `#${c.focus.id || c.id}`;
+          a.textContent = `${c.label}: ${c.message}`;
+          a.addEventListener('click', (event) => {
+            event.preventDefault();
+            c.focus.focus();
+          });
+          li.append(a);
+          return li;
+        }),
+      );
+      summary.hidden = failed.length === 0;
+      return failed;
+    };
+
+    // Clear a field's error as soon as the visitor fixes it.
+    form.addEventListener('input', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.getAttribute('aria-invalid') === 'true') {
+        const checks = validate();
+        const mine = checks.find((c) => c.control === target);
+        if (mine && !mine.message) clearError(mine.id, mine.control);
+      }
+    });
+    form.addEventListener('change', (event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.matches('[data-work-type]')) {
+        const check = validate().find((c) => c.id === 'work-type')!;
+        if (!check.message) clearError('work-type', check.control);
+      }
+    });
+
+    // ---------- attachments ----------
+    let files: File[] = [];
+    const syncInput = () => {
+      const dt = new DataTransfer();
+      files.forEach((f) => dt.items.add(f));
+      fileInput.files = dt.files;
+    };
+    const fmtSize = (bytes: number) => (bytes > 1e6 ? `${(bytes / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1e3))} KB`);
+    const renderFiles = () => {
+      fileList.replaceChildren(
+        ...files.map((file, i) => {
+          const li = document.createElement('li');
+          const name = document.createElement('span');
+          name.className = 'filelist__name';
+          name.textContent = `${file.name} (${fmtSize(file.size)})`;
+          const remove = document.createElement('button');
+          remove.type = 'button';
+          remove.textContent = 'Remove';
+          remove.setAttribute('aria-label', `Remove ${file.name}`);
+          remove.addEventListener('click', () => {
+            files.splice(i, 1);
+            syncInput();
+            renderFiles();
+            clearError('files', fileInput);
+          });
+          li.append(name, remove);
+          return li;
+        }),
+      );
+    };
+    fileInput.addEventListener('change', () => {
+      files = Array.from(fileInput.files ?? []);
+      renderFiles();
+    });
+    ['dragenter', 'dragover'].forEach((type) => dropzone.addEventListener(type, () => dropzone.classList.add('is-over')));
+    ['dragleave', 'drop'].forEach((type) => dropzone.addEventListener(type, () => dropzone.classList.remove('is-over')));
+
+    // ---------- submit ----------
+    const buildMailto = () => {
+      const data = new FormData(form);
+      const lines: string[] = [];
+      const take = (key: string) => data.getAll(key).filter((v) => typeof v === 'string' && v).join(', ');
+      const name = `${take('First Name')} ${take('Last Name')}`.trim();
+      lines.push(`Name: ${name}`);
+      if (take('Company Name')) lines.push(`Company: ${take('Company Name')}`);
+      lines.push(`Email: ${take('Email')}`);
+      lines.push(`Type of work: ${take('Type of Work')}`);
+      if (take('Preferred Contact Method')) lines.push(`Preferred contact method: ${take('Preferred Contact Method')}`);
+      if (take('Other Contact Method')) lines.push(`Other: ${take('Other Contact Method')}`);
+      lines.push('', 'Project details:', take('Project Details'));
+      const subject = `Project inquiry from ${name || 'thatsraysvoice.com'}`;
+      return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.textContent = '';
+      const failed = showErrors(validate());
+      if (failed.length) {
+        summary.focus({ preventScroll: true });
+        summary.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        return;
+      }
+      // Honeypot filled: pretend success, send nothing.
+      const trap = form.querySelector<HTMLInputElement>('input[name="_gotcha"]');
+      if (trap?.value) {
+        form.hidden = true;
+        success.hidden = false;
+        return;
+      }
+
+      if (!endpoint) {
+        const hasFiles = files.length > 0;
+        window.location.href = buildMailto();
+        form.hidden = true;
+        fallback.hidden = false;
+        fallbackFiles.hidden = !hasFiles;
+        fallback.focus();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.setAttribute('aria-busy', 'true');
+      status.textContent = 'Sending…';
+      try {
+        const response = await fetch(endpoint, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error(String(response.status));
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+        success.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      } catch {
+        status.textContent = `Sorry, your message could not be sent. Please try again, or email me directly at ${email}.`;
+        submit.disabled = false;
+        submit.removeAttribute('aria-busy');
+      }
+    });
+  }
+</script>

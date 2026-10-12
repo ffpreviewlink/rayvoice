@@ -1,0 +1,125 @@
+/* ------------------------------------------------------------------
+   Design tokens: That's Ray's Voice
+   Midnight navy + warm ivory, with coral used only as an intentional accent.
+   ------------------------------------------------------------------ */
+:root {
+  /* Navy (dark surfaces) */
+  --navy-950: #0b1022;
+  --navy-900: #121830;
+  --navy-800: #1b2342;
+  --navy-700: #2b3558;
+  --navy-600: #44507a;
+
+  /* Ivory (light surfaces) */
+  --ivory-50: #fcfbf7;
+  --ivory-100: #f6f4ed;
+  --ivory-200: #ece9de;
+  --ivory-300: #dad6c7;
+  --mist-100: #e6eaf2; /* cool intermediate: the original testimonial surface */
+  --mist-200: #d3d9e6;
+
+  /* Coral accent */
+  --coral-400: #ff8470;
+  --coral-500: #ff6a55; /* fills and text on navy */
+  --coral-600: #e9503b;
+  --coral-700: #bf3526; /* coral text on ivory (>= 4.5:1) */
+
+  /* Text */
+  --ink: var(--navy-900);
+  --ink-muted: #4a516a; /* on ivory / mist */
+  --ink-on-dark: #f6f4ed;
+  --ink-muted-on-dark: #b3bad0;
+
+  /* Semantic roles (light surface by default; .on-dark swaps them) */
+  --surface: var(--ivory-100);
+  --surface-raised: var(--ivory-50);
+  --text: var(--ink);
+  --text-muted: var(--ink-muted);
+  --accent: var(--coral-500);
+  --accent-text: var(--coral-700);
+  --line: rgb(18 24 48 / 0.16);
+  --line-strong: rgb(18 24 48 / 0.5);
+  --focus: var(--navy-900);
+
+  /* Typography */
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-serif: var(--font-display), Georgia, serif;
+
+  --fs-display: clamp(2.5rem, 1.3rem + 5.1vw, 5.5rem);
+  --fs-h1: clamp(2.25rem, 1.3rem + 4.2vw, 4.75rem);
+  --fs-h2: clamp(1.875rem, 1.25rem + 2.6vw, 3.25rem);
+  --fs-h3: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  --fs-quote: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --fs-lead: clamp(1.125rem, 1.04rem + 0.45vw, 1.4rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-label: 0.8125rem;
+
+  --lh-tight: 1.02;
+  --lh-snug: 1.15;
+  --lh-body: 1.65;
+
+  /* Spacing (fluid) */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  --space-l: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+  --space-xl: clamp(3rem, 2rem + 4vw, 5.5rem);
+  --space-section: clamp(4.5rem, 3rem + 6.5vw, 9rem);
+
+  /* Layout */
+  --gutter: clamp(1.25rem, 0.5rem + 3.2vw, 3rem);
+  --container: 80rem;
+  --container-narrow: 62rem;
+  --header-h: 4.25rem;
+
+  /* Shape */
+  --radius-s: 2px;
+  --radius-m: 6px;
+  --radius-full: 999px;
+  --border: 1px solid var(--line);
+
+  /* Shadows */
+  --shadow-s: 0 1px 2px rgb(11 16 34 / 0.08);
+  --shadow-m: 0 18px 40px -18px rgb(11 16 34 / 0.45);
+
+  /* Layering */
+  --z-header: 50;
+  --z-overlay: 60;
+  --z-skip: 100;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 0.7, 0.2, 1);
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 700ms;
+}
+
+@media (min-width: 64em) {
+  :root {
+    --header-h: 4.75rem;
+  }
+}
+
+/* Dark surface: re-point the semantic roles. */
+.on-dark {
+  --surface: var(--navy-900);
+  --surface-raised: var(--navy-800);
+  --text: var(--ink-on-dark);
+  --text-muted: var(--ink-muted-on-dark);
+  --accent-text: var(--coral-500);
+  --line: rgb(246 244 237 / 0.18);
+  --line-strong: rgb(246 244 237 / 0.55);
+  --focus: var(--ivory-100);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.on-mist {
+  --surface: var(--mist-100);
+  --surface-raised: var(--ivory-50);
+  --line: rgb(18 24 48 / 0.18);
+  background: var(--surface);
+}

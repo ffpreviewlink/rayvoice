@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import avo from '../assets/images/logo-avo.webp';
+import dominos from '../assets/images/logo-dominos.webp';
+import pizzalab from '../assets/images/logo-pizzalab.webp';
+import skarra from '../assets/images/logo-skarra.webp';
+
+/** Same four clients, same order as the original "Trusted by" row. Logos keep their native proportions (height drives size). */
+const clients = [
+  { name: 'Skarra', src: skarra, height: 3 },
+  { name: 'Domino’s', src: dominos, height: 5.75 },
+  { name: 'AVO Pictures', src: avo, height: 5 },
+  { name: 'PizzaLab', src: pizzalab, height: 5.5 },
+];
+---
+
+<section class="clients on-dark" aria-labelledby="clients-title">
+  <div class="container clients__inner">
+    <h2 id="clients-title" class="clients__title">Trusted by<span class="colon">:</span></h2>
+    <ul class="clients__list">
+      {
+        clients.map((client) => (
+          <li class="clients__item">
+            <Image src={client.src} alt={client.name} style={`--h:${client.height}rem`} widths={[240, 480]} sizes="(min-width: 48em) 14rem, 45vw" class="clients__logo" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .clients {
+    padding-block: var(--space-xl) var(--space-l);
+  }
+  .clients__inner {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .clients__title {
+    font-size: var(--fs-h2);
+  }
+  .clients__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  .clients__item {
+    display: grid;
+    place-items: center;
+    min-height: 9.5rem;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .clients__item:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+  .clients :global(.clients__logo) {
+    height: var(--h);
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  @media (min-width: 48em) {
+    .clients__list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+    .clients__item {
+      min-height: 12rem;
+      border-bottom: 0;
+    }
+    .clients__item:nth-child(odd) {
+      border-right: 0;
+    }
+    .clients__item + .clients__item {
+      border-left: 1px solid var(--line);
+    }
+  }
+  @media (min-width: 64em) {
+    .clients__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+      align-items: center;
+      column-gap: var(--space-l);
+    }
+    .clients__list {
+      border-top: 0;
+      border-bottom: 0;
+      border-left: 1px solid var(--line);
+    }
+    .clients__item + .clients__item {
+      border-left: 1px solid var(--line);
+    }
+  }
+</style>

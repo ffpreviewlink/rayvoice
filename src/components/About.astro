@@ -1,0 +1,206 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/images/portrait-about.webp';
+---
+
+<section id="about" class="about section" aria-labelledby="about-title">
+  <div class="container">
+    <header class="about__head">
+      <h2 id="about-title" class="about__title">About Me<span class="colon">:</span></h2>
+    </header>
+
+    <div class="about__grid">
+      <figure class="about__figure" data-reveal>
+        <Image
+          src={portrait}
+          width={1200}
+          alt="Portrait of Ray Rodrigues in a dark checked blazer and yellow-tinted glasses, looking to his right"
+          widths={[480, 720, 960, 1200]}
+          sizes="(min-width: 64em) 30rem, 92vw"
+          class="about__img"
+        />
+      </figure>
+
+      <div class="about__body">
+        <blockquote class="about__quote">
+          <p>“Bringing Words to Life&#8288;—<wbr />One Voice at a Time.”</p>
+        </blockquote>
+
+        <ol class="about__prose">
+          <li class="about__para about__para--lead">
+            <span class="about__num" aria-hidden="true">01</span>
+            <p>
+              Welcome! I’m <span class="mark">Ray</span>, a young-adult voice actor who brings “main-character” energy to every project. My journey began in animation&#8288;—<wbr />designing characters, storyboarding scenes, and crafting visual narratives&#8288;—<wbr /><span class="mark">so storytelling has always been at the core of my work</span>. That foundation infuses my voiceover performances with authenticity, nuance, and emotional depth.
+            </p>
+          </li>
+          <li class="about__para">
+            <span class="about__num" aria-hidden="true">02</span>
+            <p>
+              I’m <span class="mark">natively fluent in American English, British English, Italian, and Bulgarian</span>, and I love moving between accents and dialects to suit any mood or genre. Whether you need an inspiring trailer voice, a friendly IVR greeting, a polished commercial read, or a heartfelt documentary narration, I adapt my tone and rhythm to serve your script and engage your audience.
+            </p>
+          </li>
+          <li class="about__para">
+            <span class="about__num" aria-hidden="true">03</span>
+            <p>
+              At home in my broadcast-quality studio, I record with top-tier microphones and acoustic treatment to deliver crystal-clear, broadcast-ready audio. I pride myself on both speed and precision&#8288;—<wbr />most projects are turned around in <span class="mark">under eight hours</span>, and always within twelve. If you prefer live direction, I’m just a click away on Source-Connect, Zoom, Skype, or your platform of choice, so we can fine-tune the performance in real time.
+            </p>
+          </li>
+          <li class="about__para">
+            <span class="about__num" aria-hidden="true">04</span>
+            <p>
+              Clients like <span class="mark">Domino’s have trusted me to elevate their brand messages</span>, and I approach every session with enthusiasm, professionalism, and a collaborative spirit. Whether you’re launching a new campaign, developing e-learning content, or adding the finishing touch to your film or game, I’m here to bring your words to life with warmth, clarity, and impact. <span class="mark">Let’s create something extraordinary together!</span>
+            </p>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Facts below are lifted from the biography above, laid out like a session sheet. -->
+    <dl class="sheet" data-reveal>
+      <div class="sheet__item">
+        <dt class="label">Natively fluent</dt>
+        <dd>American English, British English, Italian, Bulgarian</dd>
+      </div>
+      <div class="sheet__item">
+        <dt class="label">Turnaround</dt>
+        <dd>Most projects in under eight hours, always within twelve</dd>
+      </div>
+      <div class="sheet__item">
+        <dt class="label">Studio</dt>
+        <dd>Broadcast-quality, with top-tier microphones and acoustic treatment</dd>
+      </div>
+      <div class="sheet__item">
+        <dt class="label">Live direction</dt>
+        <dd>Source-Connect, Zoom, Skype, or your platform of choice</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .about__head {
+    padding-bottom: var(--space-s);
+    border-bottom: 1px solid var(--line-strong);
+    margin-bottom: var(--space-l);
+  }
+  .about__title {
+    font-size: var(--fs-h1);
+    line-height: 1;
+  }
+
+  .about__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .about__figure {
+    margin: 0;
+    position: relative;
+  }
+  .about__figure :global(.about__img) {
+    width: 100%;
+    aspect-ratio: 4 / 3.4;
+    object-fit: cover;
+    object-position: 50% 22%;
+  }
+
+  .about__quote {
+    margin: 0 0 var(--space-l);
+    font-family: var(--font-serif);
+    font-size: var(--fs-h3);
+    line-height: 1.12;
+    max-width: 22ch;
+  }
+  .about__prose {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .about__para {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    column-gap: 0.5rem;
+  }
+  .about__num {
+    padding-top: 0.2em;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    color: var(--accent-text);
+  }
+  .about__para p {
+    max-width: 38rem;
+  }
+  .about__para--lead p {
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  .sheet {
+    display: grid;
+    margin-top: var(--space-xl);
+    border-top: 2px solid var(--ink);
+  }
+  .sheet__item {
+    display: grid;
+    align-content: start;
+    gap: 0.25rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet__item dt {
+    color: var(--accent-text);
+  }
+  .sheet__item dd {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 48em) {
+    .sheet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-l);
+    }
+    .about__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(1rem, 0.4rem + 2vw, 2rem);
+      align-items: start;
+    }
+    .about__figure {
+      grid-column: 1 / span 5;
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+    .about__figure :global(.about__img) {
+      aspect-ratio: 4 / 5;
+    }
+    .about__body {
+      grid-column: 6 / -1;
+    }
+    .about__para {
+      grid-template-columns: 2.25rem minmax(0, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .about__body {
+      grid-column: 7 / -1;
+    }
+    .about__quote {
+      margin-left: -4rem;
+      margin-bottom: var(--space-xl);
+      padding-top: 1rem;
+      max-width: 17ch;
+      font-size: clamp(2.5rem, 1.5rem + 2.6vw, 3.75rem);
+    }
+    .about__para {
+      grid-template-columns: 4rem minmax(0, 1fr);
+    }
+    .sheet {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .sheet__item {
+      padding-right: var(--space-m);
+      border-bottom: 0;
+    }
+  }
+</style>

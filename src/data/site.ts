@@ -1,0 +1,18 @@
+/** Site-wide facts. Copy comes verbatim from the original site unless noted. */
+export const site = {
+  name: "That's Ray's Voice",
+  person: 'Ray Rodrigues',
+  email: 'ray@thatsraysvoice.com',
+  locale: 'en_US',
+  description:
+    'Ray Rodrigues is a young-adult voice actor, natively fluent in American English, British English, Italian and Bulgarian. Listen to the showreels and request a free custom voiceover demo, turnaround in 12h or less.',
+  /** Mailto used by every "Free Custom Demo" call to action on the original site. */
+  demoMailto: "mailto:ray@thatsraysvoice.com?subject=Hey%20Ray%2C%20I'd%20like%20to%20request%20a%20custom%20demo",
+  tagline: 'Scripts, Stories, and a Dash of Ray.',
+} as const;
+
+export const nav = [
+  { label: 'Home', href: '/' },
+  { label: 'Showreels', href: '/showreels' },
+  { label: 'Contact Me', href: '/contacts' },
+] as const;

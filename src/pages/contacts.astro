@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/images/portrait-suit.webp';
+import ContactForm from '../components/ContactForm.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Contact Me"
+  description="Have a question, need a quote, or ready to book Ray Rodrigues for a project? Send an inquiry and get an answer in less than a day."
+  footerFrom="var(--ivory-100)"
+>
+  <header class="intro">
+    <div class="container">
+      <h1 class="intro__title">Let’s Bring Your Next Project to Life!</h1>
+      <p class="intro__lead lead">Have a question, need a quote, or ready to book me for a project? Let’s talk. Fill out the form below or reach out directly via email.</p>
+    </div>
+  </header>
+
+  <div class="container contact">
+    <ContactForm />
+
+    <aside class="aside" aria-labelledby="aside-title">
+      <h2 id="aside-title" class="aside__title">You can also Email Me directly at<span class="colon">:</span></h2>
+      <a class="aside__mail" href={`mailto:${site.email}`}>{site.email}</a>
+      <figure class="aside__figure">
+        <Image src={portrait} alt="Ray Rodrigues in a suit and tie, holding a studio microphone over his shoulder" widths={[360, 540, 720]} sizes="(min-width: 64em) 24rem, 92vw" class="aside__img" />
+      </figure>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .intro {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) 0;
+  }
+  .intro .container {
+    display: grid;
+    gap: var(--space-m);
+    padding-bottom: var(--space-l);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .intro__title {
+    font-size: var(--fs-h1);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+  }
+  .intro__lead {
+    max-width: 38rem;
+    color: var(--text-muted);
+  }
+  @media (min-width: 64em) {
+    .intro .container {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--space-xl);
+      align-items: end;
+    }
+    .intro__title {
+      max-width: 12ch;
+    }
+  }
+
+  .contact {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-l) var(--space-section);
+  }
+  .aside {
+    display: grid;
+    align-content: start;
+    gap: var(--space-s);
+  }
+  .aside__title {
+    font-size: var(--fs-h3);
+    line-height: 1.1;
+  }
+  .aside__mail {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    justify-self: start;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+    line-height: 1.1;
+    color: var(--coral-700);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+    overflow-wrap: anywhere;
+  }
+  .aside__mail:hover {
+    text-decoration-thickness: 4px;
+  }
+  .aside__figure {
+    position: relative;
+    margin: var(--space-m) 0 0 0;
+    max-width: 26rem;
+  }
+  .aside__figure::before {
+    content: '';
+    position: absolute;
+    inset: 0.9rem -0.9rem -0.9rem 0.9rem;
+    border: 1.5px solid var(--coral-500);
+    pointer-events: none;
+  }
+  .aside__figure :global(.aside__img) {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 12%;
+  }
+  @media (min-width: 64em) {
+    .contact {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(1rem, 0.4rem + 2vw, 2rem);
+      align-items: start;
+    }
+    .contact > :global(.contact-form) {
+      grid-column: 1 / span 7;
+    }
+    .aside {
+      grid-column: 9 / -1;
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+    .aside__figure {
+      margin-right: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+import { Font, getImage } from 'astro:assets';
+import ogSource from '../assets/images/portrait-hero.webp';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { site } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  /** Page title. Combined with the site name unless `fullTitle` is set. */
+  title: string;
+  description?: string;
+  fullTitle?: boolean;
+  /** Colour of the last section, so the footer seam matches. */
+  footerFrom?: string;
+  noindex?: boolean;
+}
+const { title, description = site.description, fullTitle = false, footerFrom, noindex = false } = Astro.props;
+
+const pageTitle = fullTitle ? title : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
+const og = await getImage({ src: ogSource, width: 1200, height: 630, format: 'jpg', fit: 'cover', position: 'top' });
+const ogUrl = new URL(og.src, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Raymundo Rodrigues',
+  alternateName: site.person,
+  jobTitle: 'Voice actor',
+  url: new URL('/', Astro.site).href,
+  email: site.email,
+  knowsLanguage: ['en-US', 'en-GB', 'it', 'bg'],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#f6f4ed" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-display" preload={[{ subset: 'latin', style: 'normal' }]} />
+    <Font cssVariable="--font-body" preload={[{ subset: 'latin', style: 'normal' }]} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to Content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer from={footerFrom} />
+
+    <script>
+      // Scroll reveal: purely progressive; content is visible if this never runs.
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window && targets.length) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        targets.forEach((el) => observer.observe(el));
+      } else {
+        targets.forEach((el) => el.classList.add('is-in'));
+      }
+    </script>
+  </body>
+</html>

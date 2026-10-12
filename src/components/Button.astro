@@ -1,0 +1,112 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Link or button with one of three visual variants.
+ *  - primary:   coral fill, the main call to action
+ *  - secondary: outlined, follows the surrounding text colour
+ *  - text:      underlined link with an arrow
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'text';
+  size?: 'm' | 'l';
+  icon?: 'arrow-right' | 'download' | 'mail';
+  type?: 'button' | 'submit';
+  external?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+const { href, variant = 'primary', size = 'm', icon, type = 'button', external = false, class: className = '', ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+const attrs = href ? { href, ...(external ? { target: '_blank', rel: 'noopener' } : {}) } : { type };
+---
+
+<Tag class:list={['btn', `btn--${variant}`, `btn--${size}`, className]} {...attrs} {...rest}>
+  <span class="btn__label"><slot /></span>
+  {icon && <Icon name={icon} size={18} />}
+</Tag>
+
+<style>
+  .btn {
+    --btn-bg: var(--coral-500);
+    --btn-fg: var(--navy-900);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    min-height: 3rem;
+    padding: 0.7rem 1.4rem;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-s);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    max-width: 100%;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease),
+      transform var(--dur-fast) var(--ease);
+  }
+  .btn--l {
+    min-height: 3.5rem;
+    padding: 0.85rem 1.75rem;
+    font-size: 1.0625rem;
+  }
+  .btn__label {
+    text-wrap: balance;
+  }
+  .btn :global(.icon) {
+    flex: none;
+    transition: transform var(--dur) var(--ease);
+  }
+  .btn:hover :global(.icon--arrow-right) {
+    transform: translateX(4px);
+  }
+  .btn:hover :global(.icon--download) {
+    transform: translateY(2px);
+  }
+
+  .btn--primary:hover {
+    background: var(--coral-400);
+  }
+  .btn--primary:active {
+    transform: translateY(1px);
+  }
+
+  .btn--secondary {
+    --btn-bg: transparent;
+    --btn-fg: var(--text);
+    border-color: var(--line-strong);
+  }
+  .btn--secondary:hover {
+    background: var(--text);
+    color: var(--surface);
+    border-color: var(--text);
+  }
+
+  .btn--text {
+    --btn-bg: transparent;
+    --btn-fg: var(--text);
+    min-height: 2.75rem;
+    padding: 0.4rem 0;
+    border: 0;
+    border-radius: 0;
+    justify-content: flex-start;
+  }
+  .btn--text .btn__label {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+  .btn--text:hover .btn__label {
+    text-decoration-thickness: 4px;
+  }
+</style>

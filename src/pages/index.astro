@@ -1,0 +1,20 @@
+---
+import About from '../components/About.astro';
+import ClientLogos from '../components/ClientLogos.astro';
+import DemoCta from '../components/DemoCta.astro';
+import HomeHero from '../components/HomeHero.astro';
+import Testimonials from '../components/Testimonials.astro';
+import WaveDivider from '../components/WaveDivider.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="That’s Ray’s Voice" fullTitle footerFrom="var(--ivory-200)">
+  <HomeHero />
+  <WaveDivider from="var(--ivory-100)" to="var(--navy-900)" />
+  <ClientLogos />
+  <WaveDivider from="var(--navy-900)" to="var(--mist-100)" />
+  <Testimonials />
+  <WaveDivider from="var(--mist-100)" to="var(--ivory-100)" />
+  <About />
+  <DemoCta />
+</BaseLayout>

@@ -1,0 +1,71 @@
+---
+import { site } from '../data/site';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Show the sign-off line from the homepage. */
+  signoff?: boolean;
+}
+const { signoff = true } = Astro.props;
+---
+
+<section class="demo section" aria-labelledby="demo-title">
+  <div class="container demo__inner" data-reveal>
+    <p class="demo__icon" aria-hidden="true"><Icon name="mail" size={36} /></p>
+    <h2 id="demo-title" class="demo__text">
+      Request a <span class="accent">Free Custom Voiceover Demo</span> and I’ll send it over in less than a day, all for free!
+    </h2>
+    <div class="demo__actions">
+      <Button href={site.demoMailto} size="l" icon="arrow-right">Request a Free Custom Voiceover Demo</Button>
+    </div>
+    {signoff && <p class="demo__signoff">That said, let’s make some magic happen!</p>}
+  </div>
+</section>
+
+<style>
+  .demo {
+    background: var(--ivory-200);
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--line);
+  }
+  .demo__inner {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+  .demo__icon {
+    color: var(--coral-700);
+  }
+  .demo__text {
+    font-size: var(--fs-h2);
+    line-height: 1.04;
+    max-width: 20ch;
+  }
+  .demo__signoff {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    color: var(--accent-text);
+  }
+  @media (min-width: 64em) {
+    .demo__inner {
+      grid-template-columns: auto 1fr;
+      column-gap: var(--space-m);
+      align-items: start;
+    }
+    .demo__icon {
+      grid-row: 1;
+      padding-top: 0.9rem;
+    }
+    .demo__text {
+      grid-column: 2;
+      max-width: 24ch;
+    }
+    .demo__actions,
+    .demo__signoff {
+      grid-column: 2;
+    }
+  }
+</style>

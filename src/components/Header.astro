@@ -1,0 +1,286 @@
+---
+import { nav } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const current = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__inner container">
+    <a class="brand" href="/" aria-label="That’s Ray’s Voice, home">
+      <span class="brand__text">That’s <em>Ray’s</em> Voice</span>
+    </a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <span class="sr-only">Menu</span>
+      <span class="menu-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label="Main" data-nav>
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class:list={['site-nav__link', { 'site-nav__link--cta': item.href === '/contacts' }]} aria-current={current(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--ivory-100);
+    border-bottom: 1px solid var(--line);
+    view-transition-name: site-header;
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .brand__text {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+    line-height: 1;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+  .brand em {
+    color: var(--coral-700);
+  }
+
+  .menu-toggle {
+    display: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.5rem;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+  }
+  .menu-toggle__bars {
+    position: relative;
+    display: block;
+    width: 1.625rem;
+    height: 1.125rem;
+  }
+  .menu-toggle__bars span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform var(--dur) var(--ease),
+      opacity var(--dur-fast) var(--ease),
+      width var(--dur) var(--ease);
+  }
+  .menu-toggle__bars span:nth-child(1) {
+    top: 0;
+  }
+  .menu-toggle__bars span:nth-child(2) {
+    top: calc(50% - 1px);
+    width: 70%;
+  }
+  .menu-toggle__bars span:nth-child(3) {
+    bottom: 0;
+  }
+  .menu-toggle:hover .menu-toggle__bars span:nth-child(2) {
+    width: 100%;
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:nth-child(1) {
+    transform: translateY(calc(0.5625rem - 1px)) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bars span:nth-child(3) {
+    transform: translateY(calc(-0.5625rem + 1px)) rotate(-45deg);
+  }
+
+  .site-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.5rem;
+  }
+  .site-nav__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.15rem;
+    font-weight: 550;
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .site-nav__link:not(.site-nav__link--cta)::after {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    right: 0.15rem;
+    bottom: 0.45rem;
+    height: 2px;
+    background: var(--coral-600);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
+  .site-nav__link:not(.site-nav__link--cta):hover::after,
+  .site-nav__link[aria-current='page']:not(.site-nav__link--cta)::after {
+    transform: scaleX(1);
+  }
+  .site-nav__link--cta {
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-s);
+    background: var(--coral-500);
+    color: var(--navy-900);
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .site-nav__link--cta:hover {
+    background: var(--coral-400);
+  }
+  .site-nav__link--cta[aria-current='page'] {
+    box-shadow: inset 0 0 0 2px var(--navy-900);
+  }
+
+  /* Phones & tablets: the nav becomes a sheet under the header (only when JS can open it). */
+  @media (max-width: 47.99em) {
+    :global(.js) .menu-toggle {
+      display: grid;
+    }
+    :global(.js) .site-nav {
+      position: absolute;
+      inset: 100% 0 auto 0;
+      padding: 0.5rem var(--gutter) 1.5rem;
+      background: var(--ivory-100);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow-m);
+      /* Closed: collapsed upwards and unreachable (visibility removes it from tab order and screen readers). */
+      visibility: hidden;
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      transition:
+        clip-path 380ms var(--ease),
+        opacity 240ms var(--ease),
+        visibility 0s linear 380ms;
+    }
+    :global(.js) .site-nav.is-open {
+      visibility: visible;
+      opacity: 1;
+      clip-path: inset(0 0 -3rem 0);
+      transition:
+        clip-path 420ms var(--ease),
+        opacity 260ms var(--ease),
+        visibility 0s;
+    }
+    :global(.js) .site-nav li {
+      opacity: 0;
+      transform: translateY(-0.6rem);
+      transition:
+        opacity 160ms var(--ease),
+        transform 160ms var(--ease);
+    }
+    :global(.js) .site-nav.is-open li {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 360ms var(--ease) calc(80ms + var(--i, 0) * 60ms),
+        transform 420ms var(--ease) calc(80ms + var(--i, 0) * 60ms);
+    }
+    :global(.js) .site-nav li:nth-child(2) {
+      --i: 1;
+    }
+    :global(.js) .site-nav li:nth-child(3) {
+      --i: 2;
+    }
+    :global(.js) .site-nav ul {
+      display: grid;
+      gap: 0;
+    }
+    :global(.js) .site-nav li + li {
+      border-top: 1px solid var(--line);
+    }
+    :global(.js) .site-nav__link {
+      width: 100%;
+      min-height: 3.5rem;
+      font-family: var(--font-serif);
+      font-size: 1.875rem;
+      font-weight: 400;
+    }
+    :global(.js) .site-nav__link:not(.site-nav__link--cta)::after {
+      display: none;
+    }
+    :global(.js) .site-nav__link[aria-current='page']::before {
+      content: '';
+      width: 0.5rem;
+      height: 0.5rem;
+      margin-right: 0.75rem;
+      border-radius: 50%;
+      background: var(--coral-600);
+    }
+    :global(.js) .site-nav__link--cta {
+      margin-top: 0.75rem;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-size: 1.0625rem;
+      font-weight: 650;
+      min-height: 3.25rem;
+    }
+    :global(.js) .site-nav li:last-child {
+      border-top: 0;
+    }
+  }
+  /* Without JS on small screens: nav simply wraps under the brand. */
+  @media (max-width: 47.99em) {
+    :global(html:not(.js)) .site-header__inner {
+      flex-wrap: wrap;
+      padding-block: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const nav = header?.querySelector<HTMLElement>('[data-nav]');
+
+  if (header && toggle && nav) {
+    const setOpen = (open: boolean, restoreFocus = false) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('is-open', open);
+      if (!open && restoreFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
+    });
+    document.addEventListener('click', (event) => {
+      if (toggle.getAttribute('aria-expanded') === 'true' && !header.contains(event.target as Node)) setOpen(false);
+    });
+    window.matchMedia('(min-width: 48em)').addEventListener('change', (event) => event.matches && setOpen(false));
+  }
+</script>

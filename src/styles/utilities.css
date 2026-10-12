@@ -1,0 +1,70 @@
+/* Layout primitives and shared typographic patterns */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+.container--narrow {
+  width: min(100% - 2 * var(--gutter), var(--container-narrow));
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+.section--tight {
+  padding-block: var(--space-xl);
+}
+
+/* 12-column grid used by the larger compositions */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 0.4rem + 2vw, 2rem);
+}
+
+/* Small uppercase label: recording-sheet metadata */
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+}
+
+/* Coral accent word inside a heading */
+.accent {
+  color: var(--accent-text);
+  font-style: italic;
+}
+
+/* Colon glyph preserved from the original headings, treated as a typographic motif */
+.colon {
+  color: var(--accent-text);
+}
+
+/* Highlighted phrase inside running copy */
+.mark {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+/* Scroll reveal: content is visible without JS, hidden only when JS + motion are allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity var(--dur-slow) var(--ease),
+      transform var(--dur-slow) var(--ease);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}

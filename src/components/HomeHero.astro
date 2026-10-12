@@ -1,0 +1,208 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/images/portrait-hero.webp';
+import { heroReels } from '../data/media';
+import { site } from '../data/site';
+import AudioPlayer from './AudioPlayer.astro';
+import Button from './Button.astro';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__grid container">
+    <h1 id="hero-title" class="hero__title">
+      <span class="hero__eyebrow">Welcome!</span>
+      You need a voice, and <span class="accent">I&nbsp;just happen to have one.</span>
+    </h1>
+
+    <div class="hero__offer">
+      <Button href={site.demoMailto} size="l" icon="arrow-right">Request &amp; Get a Free Custom Demo</Button>
+      <p class="hero__note">(turnaround in 12h or less)</p>
+      <Button href="/showreels" variant="text" icon="arrow-right">Explore all showreels</Button>
+    </div>
+
+    <figure class="hero__figure">
+      <div class="hero__frame">
+        <Image src={portrait} alt="Ray Rodrigues smiling, holding a studio microphone" width={1200} widths={[480, 720, 960, 1200]} sizes="(min-width: 64em) 38rem, 92vw" loading="eager" fetchpriority="high" class="hero__img" />
+      </div>
+      <figcaption class="hero__caption">
+        <span class="hero__name">{site.person}</span>
+        <span class="hero__role">Voice Actor</span>
+        <span class="hero__langs">American English · British English · Italian · Bulgarian</span>
+      </figcaption>
+    </figure>
+
+    <div class="hero__console on-dark" data-reveal>
+      <div class="hero__console-head">
+        <h2 class="label hero__console-title">Showreels · English</h2>
+        <a class="hero__console-link" href="/showreels">All showreels, in three languages</a>
+      </div>
+      <ul class="hero__reels">
+        {
+          heroReels.map((reel) => (
+            <li>
+              <AudioPlayer name={reel.name} src={reel.src} durationMs={reel.durationMs} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(2rem, 1rem + 4vw, 4.5rem);
+    padding-bottom: var(--space-xl);
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .hero__title {
+    font-size: var(--fs-display);
+    line-height: var(--lh-tight);
+    letter-spacing: -0.012em;
+    max-width: 12.5ch;
+  }
+  .hero__eyebrow {
+    display: block;
+    margin-bottom: 0.18em;
+    font-size: 0.42em;
+    font-style: italic;
+    letter-spacing: 0;
+    color: var(--coral-700);
+  }
+
+  .hero__offer {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2xs);
+  }
+  .hero__note {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+
+  .hero__figure {
+    position: relative;
+    margin: 0;
+  }
+  .hero__frame {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--mist-200);
+  }
+  @media (min-width: 40em) {
+    .hero__frame {
+      aspect-ratio: 6 / 5;
+    }
+  }
+  .hero__frame :global(.hero__img) {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 18%;
+  }
+  /* Offset keyline: a quiet nod to a contact-sheet / slate frame */
+  .hero__frame::before {
+    content: '';
+    position: absolute;
+    inset: 0.9rem -0.9rem -0.9rem 0.9rem;
+    border: 1.5px solid var(--coral-500);
+    pointer-events: none;
+  }
+  .hero__caption {
+    display: grid;
+    gap: 0.1rem;
+    margin-top: 1.6rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line-strong);
+  }
+  .hero__name {
+    font-family: var(--font-serif);
+    font-size: 1.625rem;
+    line-height: 1.1;
+  }
+  .hero__role,
+  .hero__langs {
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+  .hero__role {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: var(--fs-label);
+    color: var(--coral-700);
+  }
+
+  .hero__console {
+    padding: clamp(1rem, 0.6rem + 1.6vw, 1.75rem);
+    box-shadow: var(--shadow-m);
+  }
+  .hero__console-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .hero__console-title {
+    color: var(--coral-500);
+  }
+  .hero__console-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: var(--fs-small);
+    color: var(--text);
+    text-decoration-color: var(--coral-500);
+  }
+  .hero__reels {
+    display: grid;
+    gap: 0.75rem;
+  }
+  @media (min-width: 64em) {
+    .hero__reels {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .hero__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(1rem, 0.4rem + 2vw, 2rem);
+      grid-template-rows: auto 1fr auto;
+      row-gap: var(--space-m);
+      align-items: start;
+    }
+    .hero__title {
+      grid-column: 1 / span 7;
+      grid-row: 1;
+      max-width: none;
+      padding-top: clamp(0rem, 2vw, 2rem);
+    }
+    .hero__offer {
+      grid-column: 1 / span 6;
+      grid-row: 2;
+      align-self: end;
+    }
+    .hero__figure {
+      grid-column: 8 / -1;
+      grid-row: 1 / span 2;
+    }
+    .hero__frame {
+      aspect-ratio: 4 / 5;
+    }
+    .hero__console {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      margin-top: var(--space-m);
+    }
+  }
+</style>
