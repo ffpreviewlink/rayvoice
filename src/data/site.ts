@@ -11,6 +11,10 @@ export const site = {
   tagline: 'Scripts, Stories, and a Dash of Ray.',
 } as const;
 
+/** Origin of the live site. Any other SITE_URL (e.g. a GitHub Pages preview) is treated as a non-indexable preview. */
+export const PRODUCTION_ORIGIN = 'https://www.thatsraysvoice.com';
+export const isPreview = (site?: URL) => (site?.origin ?? PRODUCTION_ORIGIN) !== PRODUCTION_ORIGIN;
+
 export const nav = [
   { label: 'Home', href: '/' },
   { label: 'Showreels', href: '/showreels' },

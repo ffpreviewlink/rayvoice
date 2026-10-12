@@ -1,5 +1,6 @@
 ---
 import { nav, site } from '../data/site';
+import { url } from '../utils/url';
 import Button from './Button.astro';
 import WaveDivider from './WaveDivider.astro';
 
@@ -31,7 +32,7 @@ const year = new Date().getFullYear();
       </div>
       <nav aria-label="Footer">
         <ul class="footer__nav">
-          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
         </ul>
       </nav>
@@ -101,7 +102,13 @@ const year = new Date().getFullYear();
     color: var(--text);
     text-decoration-color: var(--line-strong);
   }
+  .footer__nav a {
+    transition:
+      color var(--dur-fast) var(--ease),
+      text-decoration-color var(--dur-fast) var(--ease);
+  }
   .footer__nav a:hover {
+    color: var(--coral-500);
     text-decoration-color: var(--coral-500);
   }
   .footer__bar {

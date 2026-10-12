@@ -1,4 +1,5 @@
 ---
+import { url } from '../utils/url';
 import Icon from './Icon.astro';
 
 /**
@@ -19,7 +20,9 @@ interface Props {
 }
 const { href, variant = 'primary', size = 'm', icon, type = 'button', external = false, class: className = '', ...rest } = Astro.props;
 const Tag = href ? 'a' : 'button';
-const attrs = href ? { href, ...(external ? { target: '_blank', rel: 'noopener' } : {}) } : { type };
+// Internal paths ('/contacts') get the site base; external URLs, mailto: and #anchors pass through untouched.
+const resolved = href?.startsWith('/') && !href.startsWith('//') ? url(href) : href;
+const attrs = href ? { href: resolved, ...(external ? { target: '_blank', rel: 'noopener' } : {}) } : { type };
 ---
 
 <Tag class:list={['btn', `btn--${variant}`, `btn--${size}`, className]} {...attrs} {...rest}>
@@ -31,6 +34,12 @@ const attrs = href ? { href, ...(external ? { target: '_blank', rel: 'noopener' 
   .btn {
     --btn-bg: var(--coral-500);
     --btn-fg: var(--navy-900);
+    /* colours the hover fill sweeps in with */
+    --btn-wipe: var(--navy-900);
+    --btn-wipe-fg: var(--ivory-50);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -49,10 +58,10 @@ const attrs = href ? { href, ...(external ? { target: '_blank', rel: 'noopener' 
     background: var(--btn-bg);
     color: var(--btn-fg);
     transition:
-      background-color var(--dur-fast) var(--ease),
-      color var(--dur-fast) var(--ease),
-      border-color var(--dur-fast) var(--ease),
-      transform var(--dur-fast) var(--ease);
+      color 200ms var(--ease),
+      border-color 320ms var(--ease),
+      transform var(--dur-fast) var(--ease),
+      box-shadow 320ms var(--ease);
   }
   .btn--l {
     min-height: 3.5rem;
@@ -64,49 +73,104 @@ const attrs = href ? { href, ...(external ? { target: '_blank', rel: 'noopener' 
   }
   .btn :global(.icon) {
     flex: none;
-    transition: transform var(--dur) var(--ease);
-  }
-  .btn:hover :global(.icon--arrow-right) {
-    transform: translateX(4px);
-  }
-  .btn:hover :global(.icon--download) {
-    transform: translateY(2px);
+    transition: transform 320ms var(--ease);
   }
 
-  .btn--primary:hover {
-    background: var(--coral-400);
+  /* Fill that sweeps in from the left on hover and leaves to the right */
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--btn-wipe);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 460ms var(--ease);
   }
-  .btn--primary:active {
+  .btn--primary:active,
+  .btn--secondary:active {
     transform: translateY(1px);
+  }
+
+  /* On dark surfaces the primary wipes to ivory instead of navy */
+  :global(.on-dark) .btn--primary {
+    --btn-wipe: var(--ivory-100);
+    --btn-wipe-fg: var(--navy-900);
   }
 
   .btn--secondary {
     --btn-bg: transparent;
     --btn-fg: var(--text);
+    --btn-wipe: var(--text);
+    --btn-wipe-fg: var(--surface);
     border-color: var(--line-strong);
   }
-  .btn--secondary:hover {
-    background: var(--text);
-    color: var(--surface);
-    border-color: var(--text);
+  /* Secondary fills from the bottom */
+  .btn--secondary::before {
+    transform: scaleY(0);
+    transform-origin: bottom;
   }
 
+  /* Text link: a coral highlighter rises behind the label */
   .btn--text {
     --btn-bg: transparent;
     --btn-fg: var(--text);
     min-height: 2.75rem;
-    padding: 0.4rem 0;
+    padding: 0.4rem 0.15rem;
     border: 0;
     border-radius: 0;
     justify-content: flex-start;
+    overflow: visible;
+  }
+  .btn--text::before {
+    display: none;
   }
   .btn--text .btn__label {
-    text-decoration: underline;
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.35em;
+    background-image: linear-gradient(var(--coral-500), var(--coral-500));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 2px;
+    padding-bottom: 0.1em;
+    transition:
+      background-size 380ms var(--ease),
+      color 320ms var(--ease);
   }
-  .btn--text:hover .btn__label {
-    text-decoration-thickness: 4px;
+
+  @media (hover: hover) {
+    .btn:hover {
+      color: var(--btn-wipe-fg);
+      /* the label flips colour once the fill has passed under it */
+      transition-duration: 160ms, 320ms, var(--dur-fast), 320ms;
+      transition-delay: 150ms, 0s, 0s, 0s;
+    }
+    .btn:hover::before {
+      transform: scale(1);
+      transform-origin: left;
+    }
+    .btn--secondary:hover {
+      border-color: var(--btn-wipe);
+    }
+    .btn--secondary:hover::before {
+      transform-origin: bottom;
+    }
+    .btn--primary:hover {
+      box-shadow: 0 10px 24px -12px rgb(11 16 34 / 0.55);
+    }
+    .btn:hover :global(.icon--arrow-right) {
+      transform: translateX(5px);
+    }
+    .btn:hover :global(.icon--download) {
+      transform: translateY(3px);
+    }
+    .btn:hover :global(.icon--mail) {
+      transform: rotate(-8deg) scale(1.1);
+    }
+    .btn--text:hover {
+      color: var(--btn-fg);
+    }
+    .btn--text:hover .btn__label {
+      background-size: 100% 100%;
+      color: var(--navy-900);
+    }
   }
 </style>

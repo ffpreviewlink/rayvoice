@@ -1,0 +1,44 @@
+name: Deploy preview to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a newer push cancels the one still running.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Preview project site: https://ffpreviewlink.github.io/rayvoice/
+      # (any SITE_URL other than the production domain also makes the build non-indexable)
+      SITE_URL: https://ffpreviewlink.github.io
+      BASE_PATH: /rayvoice
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      # Fonts are downloaded from Google at build time, so the runner needs network access (it has it by default).
+      - name: Install, build and upload the site
+        uses: withastro/action@v6
+        with:
+          node-version: 22 # the project requires Node >= 22.12
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

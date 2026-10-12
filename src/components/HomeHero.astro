@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/images/portrait-hero.webp';
 import { heroReels } from '../data/media';
 import { site } from '../data/site';
+import { url } from '../utils/url';
 import AudioPlayer from './AudioPlayer.astro';
 import Button from './Button.astro';
 ---
@@ -34,7 +35,7 @@ import Button from './Button.astro';
     <div class="hero__console on-dark" data-reveal>
       <div class="hero__console-head">
         <h2 class="label hero__console-title">Showreels · English</h2>
-        <a class="hero__console-link" href="/showreels">All showreels, in three languages</a>
+        <a class="hero__console-link" href={url('/showreels')}>All showreels, in three languages</a>
       </div>
       <ul class="hero__reels">
         {
@@ -161,6 +162,10 @@ import Button from './Button.astro';
     font-size: var(--fs-small);
     color: var(--text);
     text-decoration-color: var(--coral-500);
+    transition: color var(--dur-fast) var(--ease);
+  }
+  .hero__console-link:hover {
+    color: var(--coral-500);
   }
   .hero__reels {
     display: grid;

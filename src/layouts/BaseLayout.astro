@@ -3,7 +3,8 @@ import { Font, getImage } from 'astro:assets';
 import ogSource from '../assets/images/portrait-hero.webp';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { site } from '../data/site';
+import { isPreview, site } from '../data/site';
+import { url } from '../utils/url';
 import '../styles/global.css';
 
 interface Props {
@@ -18,7 +19,10 @@ interface Props {
 const { title, description = site.description, fullTitle = false, footerFrom, noindex = false } = Astro.props;
 
 const pageTitle = fullTitle ? title : `${title} | ${site.name}`;
-const canonical = new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
+// Astro.url.pathname already includes `base`; keep the trailing slash only on the site root.
+const basePath = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname === basePath ? basePath : Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
+const preview = isPreview(Astro.site);
 const og = await getImage({ src: ogSource, width: 1200, height: 630, format: 'jpg', fit: 'cover', position: 'top' });
 const ogUrl = new URL(og.src, Astro.site);
 
@@ -28,7 +32,7 @@ const jsonLd = {
   name: 'Raymundo Rodrigues',
   alternateName: site.person,
   jobTitle: 'Voice actor',
-  url: new URL('/', Astro.site).href,
+  url: new URL(url('/'), Astro.site).href,
   email: site.email,
   knowsLanguage: ['en-US', 'en-GB', 'it', 'bg'],
 };
@@ -46,10 +50,10 @@ const jsonLd = {
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {preview ? <meta name="robots" content="noindex, nofollow" /> : noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#f6f4ed" />
 
-    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href={url('/favicon.ico')} sizes="any" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />

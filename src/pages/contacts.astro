@@ -90,7 +90,13 @@ import { site } from '../data/site';
     text-underline-offset: 0.18em;
     overflow-wrap: anywhere;
   }
+  .aside__mail {
+    transition:
+      color var(--dur-fast) var(--ease),
+      text-decoration-thickness var(--dur-fast) var(--ease);
+  }
   .aside__mail:hover {
+    color: var(--navy-900);
     text-decoration-thickness: 4px;
   }
   .aside__figure {

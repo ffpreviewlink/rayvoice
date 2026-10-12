@@ -31,6 +31,14 @@ src/
   assets/images/  optimised at build by astro:assets
 ```
 
+## Preview on GitHub Pages
+
+`.github/workflows/deploy.yml` builds with `SITE_URL=https://ffpreviewlink.github.io` and `BASE_PATH=/rayvoice`
+and publishes to <https://ffpreviewlink.github.io/rayvoice/> (Settings → Pages → Source: GitHub Actions).
+All internal links go through `url()` in `src/utils/url.ts`, so they respect `BASE_PATH`. Any `SITE_URL`
+other than the production domain adds `noindex, nofollow` and serves `Disallow: /` in `robots.txt`.
+Without those variables the build is the production one, served from the domain root.
+
 ## Contact form
 
 Copy `.env.example` to `.env` and set `PUBLIC_FORM_ENDPOINT` to any service that accepts a

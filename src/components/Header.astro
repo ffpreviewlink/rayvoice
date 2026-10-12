@@ -1,13 +1,15 @@
 ---
 import { nav } from '../data/site';
+import { stripBase, url } from '../utils/url';
 
-const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+// Compare against the route, not the full pathname, so it also works under a base path.
+const path = stripBase(Astro.url.pathname).replace(/\/+$/, '') || '/';
 const current = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
 ---
 
 <header class="site-header" data-header>
   <div class="site-header__inner container">
-    <a class="brand" href="/" aria-label="That’s Ray’s Voice, home">
+    <a class="brand" href={url('/')} aria-label="That’s Ray’s Voice, home">
       <span class="brand__text">That’s <em>Ray’s</em> Voice</span>
     </a>
 
@@ -21,7 +23,7 @@ const current = (href: string) => (href === '/' ? path === '/' : path === href |
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} class:list={['site-nav__link', { 'site-nav__link--cta': item.href === '/contacts' }]} aria-current={current(item.href) ? 'page' : undefined}>
+              <a href={url(item.href)} class:list={['site-nav__link', { 'site-nav__link--cta': item.href === '/contacts' }]} aria-current={current(item.href) ? 'page' : undefined}>
                 {item.label}
               </a>
             </li>
@@ -65,6 +67,12 @@ const current = (href: string) => (href === '/' ? path === '/' : path === href |
   }
   .brand em {
     color: var(--coral-700);
+    transition: color var(--dur) var(--ease);
+  }
+  @media (hover: hover) {
+    .brand:hover em {
+      color: var(--coral-500);
+    }
   }
 
   .menu-toggle {
@@ -76,6 +84,15 @@ const current = (href: string) => (href === '/' ? path === '/' : path === href |
     border: 0;
     background: transparent;
     color: var(--ink);
+  }
+  .menu-toggle {
+    border-radius: var(--radius-full);
+    transition: background-color var(--dur) var(--ease);
+  }
+  @media (hover: hover) {
+    .menu-toggle:hover {
+      background: rgb(18 24 48 / 0.07);
+    }
   }
   .menu-toggle__bars {
     position: relative;
@@ -152,14 +169,33 @@ const current = (href: string) => (href === '/' ? path === '/' : path === href |
     transform: scaleX(1);
   }
   .site-nav__link--cta {
+    isolation: isolate;
+    overflow: hidden;
     padding: 0.55rem 1.15rem;
     border-radius: var(--radius-s);
     background: var(--coral-500);
     color: var(--navy-900);
-    transition: background-color var(--dur-fast) var(--ease);
+    transition: color 320ms var(--ease);
   }
-  .site-nav__link--cta:hover {
-    background: var(--coral-400);
+  .site-nav__link--cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--navy-900);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 460ms var(--ease);
+  }
+  @media (hover: hover) {
+    .site-nav__link--cta:hover {
+      color: var(--ivory-50);
+      transition-delay: 150ms;
+    }
+    .site-nav__link--cta:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
   }
   .site-nav__link--cta[aria-current='page'] {
     box-shadow: inset 0 0 0 2px var(--navy-900);

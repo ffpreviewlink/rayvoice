@@ -265,10 +265,18 @@ const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'
     cursor: pointer;
     transition:
       border-color var(--dur-fast) var(--ease),
-      background-color var(--dur-fast) var(--ease);
+      background-color var(--dur-fast) var(--ease),
+      transform var(--dur-fast) var(--ease);
   }
-  .choice:hover {
-    border-color: var(--ink);
+  @media (hover: hover) {
+    .choice:hover {
+      border-color: var(--ink);
+      background: var(--ivory-200);
+      transform: translateY(-1px);
+    }
+    .choice:hover .choice__box {
+      border-color: var(--coral-700);
+    }
   }
   .choice input {
     position: absolute;
@@ -327,9 +335,24 @@ const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'
     text-align: center;
     transition: background-color var(--dur-fast) var(--ease);
   }
-  .dropzone:hover,
+  .dropzone__icon {
+    transition:
+      transform var(--dur) var(--ease),
+      background-color var(--dur) var(--ease);
+  }
   .dropzone.is-over {
     background: var(--ivory-200);
+    border-color: var(--coral-700);
+  }
+  @media (hover: hover) {
+    .dropzone:hover {
+      background: var(--ivory-200);
+      border-color: var(--coral-700);
+    }
+    .dropzone:hover .dropzone__icon {
+      background: var(--coral-500);
+      transform: rotate(90deg);
+    }
   }
   .dropzone:focus-within {
     outline: 3px solid var(--ink);
@@ -370,6 +393,9 @@ const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'
   }
   .filelist__name {
     overflow-wrap: anywhere;
+  }
+  .filelist button:hover {
+    color: var(--coral-700);
   }
   .filelist button {
     flex: none;

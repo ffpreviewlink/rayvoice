@@ -144,7 +144,13 @@ const index = [
     text-decoration-thickness: 2px;
     text-underline-offset: 0.35em;
   }
+  .intro__index a {
+    transition:
+      color var(--dur-fast) var(--ease),
+      text-decoration-thickness var(--dur-fast) var(--ease);
+  }
   .intro__index a:hover {
+    color: var(--coral-700);
     text-decoration-thickness: 4px;
   }
   @media (min-width: 64em) {
