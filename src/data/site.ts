@@ -9,6 +9,14 @@ export const site = {
   /** Mailto used by every "Free Custom Demo" call to action on the original site. */
   demoMailto: "mailto:ray@thatsraysvoice.com?subject=Hey%20Ray%2C%20I'd%20like%20to%20request%20a%20custom%20demo",
   tagline: 'Scripts, Stories, and a Dash of Ray.',
+  /** Default social sharing image (public/images/og-image.jpg, 1200x630). Pages may override it. */
+  ogImage: {
+    path: '/images/og-image.jpg',
+    width: 1200,
+    height: 630,
+    type: 'image/jpeg',
+    alt: 'That’s Ray’s Voice: Professional Voice Actor & Voice-Over Artist',
+  },
 } as const;
 
 /** Origin of the live site. Any other SITE_URL (e.g. a GitHub Pages preview) is treated as a non-indexable preview. */

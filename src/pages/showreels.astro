@@ -32,7 +32,7 @@ const index = [
       <nav class="intro__index" aria-label="On this page">
         <p class="label">Jump to</p>
         <ul>
-          {index.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          {index.map((item) => <li><a href={item.href}><span class="u-draw">{item.label}</span></a></li>)}
         </ul>
       </nav>
     </div>
@@ -136,22 +136,16 @@ const index = [
     margin-bottom: 0.15rem;
   }
   .intro__index a {
+    /* the only underline is the coral .u-draw one on the inner span */
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;
     font-weight: 600;
-    text-decoration-color: var(--coral-600);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.35em;
-  }
-  .intro__index a {
-    transition:
-      color var(--dur-fast) var(--ease),
-      text-decoration-thickness var(--dur-fast) var(--ease);
+    transition: color var(--dur-fast) var(--ease);
   }
   .intro__index a:hover {
     color: var(--coral-700);
-    text-decoration-thickness: 4px;
   }
   @media (min-width: 64em) {
     .intro__inner {

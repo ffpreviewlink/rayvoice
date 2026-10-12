@@ -13,6 +13,7 @@ Static output, no UI framework, no client JavaScript except where interaction ne
 | `npm run build` | Production build into `dist/` (fonts are downloaded at build time, so it needs network access) |
 | `npm run preview` | Serve `dist/` locally |
 | `npm run check` | Type-check Astro/TS files |
+| `npm run favicons` | Re-render `favicon.ico`, the 16/32 px PNGs and `apple-touch-icon.png` from the original artwork in `brand/favicon-source.png` |
 
 ## Routes (same URLs as the Squarespace site)
 

@@ -23,7 +23,7 @@ import { site } from '../data/site';
 
     <aside class="aside" aria-labelledby="aside-title">
       <h2 id="aside-title" class="aside__title">You can also Email Me directly at<span class="colon">:</span></h2>
-      <a class="aside__mail" href={`mailto:${site.email}`}>{site.email}</a>
+      <a class="aside__mail" href={`mailto:${site.email}`}><span class="u-draw">{site.email}</span></a>
       <figure class="aside__figure">
         <Image src={portrait} alt="Ray Rodrigues in a suit and tie, holding a studio microphone over his shoulder" widths={[360, 540, 720]} sizes="(min-width: 64em) 24rem, 92vw" class="aside__img" />
       </figure>
@@ -71,6 +71,8 @@ import { site } from '../data/site';
     display: grid;
     align-content: start;
     gap: var(--space-s);
+    /* lets the email size itself from the column width, so it always fits on one line */
+    container-type: inline-size;
   }
   .aside__title {
     font-size: var(--fs-h3);
@@ -83,21 +85,20 @@ import { site } from '../data/site';
     justify-self: start;
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+    /* 22 characters in italic Fraunces are ~11em wide: 8cqi keeps the whole address inside the column */
+    font-size: min(2.5rem, 8cqi);
     line-height: 1.1;
     color: var(--coral-700);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.18em;
-    overflow-wrap: anywhere;
+    /* the only underline is the coral .u-draw one on the inner span */
+    text-decoration: none;
+    --u-th: 3px;
+    white-space: nowrap;
   }
   .aside__mail {
-    transition:
-      color var(--dur-fast) var(--ease),
-      text-decoration-thickness var(--dur-fast) var(--ease);
+    transition: color 320ms var(--ease);
   }
   .aside__mail:hover {
     color: var(--navy-900);
-    text-decoration-thickness: 4px;
   }
   .aside__figure {
     position: relative;

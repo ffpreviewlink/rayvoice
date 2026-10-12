@@ -17,14 +17,14 @@ const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'
 <div class="contact-form" data-contact data-endpoint={endpoint} data-email={site.email}>
   <div class="form-success" data-success tabindex="-1" role="status" hidden>
     <h2 class="form-success__title"><em>Thank you for reaching out! 🎙️</em></h2>
-    <p>Your message has been received, and I’ll get back to you within <strong>24 hours</strong>. If your request is urgent, feel free to email me at <strong>{site.email}</strong></p>
+    <p>Your message has been received, and I’ll get back to you within <strong>24 hours</strong>. If your request is urgent, feel free to email me at <strong class="nowrap">{site.email}</strong></p>
   </div>
 
   <div class="form-fallback" data-fallback tabindex="-1" role="status" hidden>
     <h2 class="form-success__title"><em>Almost there!</em></h2>
     <p>
       Your email app should now open with your inquiry ready to send. If it doesn’t, write to me directly at
-      <a href={`mailto:${site.email}`}>{site.email}</a>.
+      <a class="nowrap" href={`mailto:${site.email}`}>{site.email}</a>.
     </p>
     <p data-fallback-files hidden>Email links can’t carry attachments, so please attach your script or reference files to that email.</p>
   </div>
@@ -114,7 +114,7 @@ const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'
     <div class="field">
       <label class="field__label" for="files" id="files-label">Attachment Upload (If Needed)</label>
       <p class="field__hint" id="files-hint">
-        Have a script, reference audio, or specific guidelines for your project? Upload them here to help me understand your needs better. If you prefer, you can also email attachments to {site.email}
+        Have a script, reference audio, or specific guidelines for your project? Upload them here to help me understand your needs better. If you prefer, you can also email attachments to <span class="nowrap">{site.email}</span>
       </p>
       <div class="dropzone" data-dropzone>
         <input id="files" name="Attachments" type="file" multiple aria-describedby="files-hint err-files" data-files />
@@ -687,7 +687,10 @@ const contactMethods = ['Zoom', 'email', 'phone', 'other (please specify below)'
         success.focus();
         success.scrollIntoView({ block: 'center', behavior: 'smooth' });
       } catch {
-        status.textContent = `Sorry, your message could not be sent. Please try again, or email me directly at ${email}.`;
+        const address = document.createElement('span');
+        address.className = 'nowrap';
+        address.textContent = email;
+        status.replaceChildren('Sorry, your message could not be sent. Please try again, or email me directly at ', address, '.');
         submit.disabled = false;
         submit.removeAttribute('aria-busy');
       }

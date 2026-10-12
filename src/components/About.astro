@@ -26,32 +26,22 @@ import portrait from '../assets/images/portrait-about.webp';
           <p>“Bringing Words to Life&#8288;—<wbr />One Voice at a Time.”</p>
         </blockquote>
 
-        <ol class="about__prose">
-          <li class="about__para about__para--lead">
-            <span class="about__num" aria-hidden="true">01</span>
-            <p>
-              Welcome! I’m <span class="mark">Ray</span>, a young-adult voice actor who brings “main-character” energy to every project. My journey began in animation&#8288;—<wbr />designing characters, storyboarding scenes, and crafting visual narratives&#8288;—<wbr /><span class="mark">so storytelling has always been at the core of my work</span>. That foundation infuses my voiceover performances with authenticity, nuance, and emotional depth.
-            </p>
-          </li>
-          <li class="about__para">
-            <span class="about__num" aria-hidden="true">02</span>
+        <div class="about__prose">
+          <p class="about__bio">
+            Welcome! I’m <span class="mark">Ray</span>, a young-adult voice actor who brings “main-character” energy to every project. My journey began in animation&#8288;—<wbr />designing characters, storyboarding scenes, and crafting visual narratives&#8288;—<wbr /><span class="mark">so storytelling has always been at the core of my work</span>. That foundation infuses my voiceover performances with authenticity, nuance, and emotional depth.
+          </p>
+          <div class="about__more">
             <p>
               I’m <span class="mark">natively fluent in American English, British English, Italian, and Bulgarian</span>, and I love moving between accents and dialects to suit any mood or genre. Whether you need an inspiring trailer voice, a friendly IVR greeting, a polished commercial read, or a heartfelt documentary narration, I adapt my tone and rhythm to serve your script and engage your audience.
             </p>
-          </li>
-          <li class="about__para">
-            <span class="about__num" aria-hidden="true">03</span>
             <p>
               At home in my broadcast-quality studio, I record with top-tier microphones and acoustic treatment to deliver crystal-clear, broadcast-ready audio. I pride myself on both speed and precision&#8288;—<wbr />most projects are turned around in <span class="mark">under eight hours</span>, and always within twelve. If you prefer live direction, I’m just a click away on Source-Connect, Zoom, Skype, or your platform of choice, so we can fine-tune the performance in real time.
             </p>
-          </li>
-          <li class="about__para">
-            <span class="about__num" aria-hidden="true">04</span>
             <p>
               Clients like <span class="mark">Domino’s have trusted me to elevate their brand messages</span>, and I approach every session with enthusiasm, professionalism, and a collaborative spirit. Whether you’re launching a new campaign, developing e-learning content, or adding the finishing touch to your film or game, I’m here to bring your words to life with warmth, clarity, and impact. <span class="mark">Let’s create something extraordinary together!</span>
             </p>
-          </li>
-        </ol>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -110,29 +100,30 @@ import portrait from '../assets/images/portrait-about.webp';
     line-height: 1.12;
     max-width: 22ch;
   }
+  /* Mini bio (display serif) followed by the fuller descriptions (body text) */
   .about__prose {
     display: grid;
     gap: var(--space-m);
   }
-  .about__para {
-    display: grid;
-    grid-template-columns: 2.75rem minmax(0, 1fr);
-    column-gap: 0.5rem;
-  }
-  .about__num {
-    padding-top: 0.2em;
+  .about__bio {
+    max-width: 40rem;
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--line-strong);
     font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 1.05rem + 0.75vw, 1.625rem);
+    line-height: 1.35;
+    text-wrap: pretty;
+  }
+  .about__bio .mark {
+    font-weight: inherit;
     font-style: italic;
-    font-size: 1.25rem;
-    line-height: 1.4;
-    color: var(--accent-text);
   }
-  .about__para p {
+  .about__more {
+    display: grid;
+    gap: var(--space-s);
+  }
+  .about__more p {
     max-width: 38rem;
-  }
-  .about__para--lead p {
-    font-size: var(--fs-lead);
-    line-height: 1.5;
   }
 
   .sheet {
@@ -177,9 +168,6 @@ import portrait from '../assets/images/portrait-about.webp';
     .about__body {
       grid-column: 6 / -1;
     }
-    .about__para {
-      grid-template-columns: 2.25rem minmax(0, 1fr);
-    }
   }
   @media (min-width: 64em) {
     .about__body {
@@ -191,9 +179,6 @@ import portrait from '../assets/images/portrait-about.webp';
       padding-top: 1rem;
       max-width: 17ch;
       font-size: clamp(2.5rem, 1.5rem + 2.6vw, 3.75rem);
-    }
-    .about__para {
-      grid-template-columns: 4rem minmax(0, 1fr);
     }
     .sheet {
       grid-template-columns: repeat(4, minmax(0, 1fr));

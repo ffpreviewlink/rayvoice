@@ -68,3 +68,43 @@
     transform: none;
   }
 }
+
+/* Text link with a coral underline that is redrawn on hover (line leaves right, new one draws in from the left). */
+.u-draw {
+  background-image: linear-gradient(var(--coral-600), var(--coral-600));
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: 100% var(--u-th, 2px);
+  padding-bottom: 0.15em;
+  text-decoration: none;
+}
+@keyframes u-draw {
+  0% {
+    background-size: 100% var(--u-th, 2px);
+    background-position: 100% 100%;
+  }
+  45% {
+    background-size: 0 var(--u-th, 2px);
+    background-position: 100% 100%;
+  }
+  46% {
+    background-size: 0 var(--u-th, 2px);
+    background-position: 0 100%;
+  }
+  100% {
+    background-size: 100% var(--u-th, 2px);
+    background-position: 0 100%;
+  }
+}
+@media (hover: hover) {
+  .u-draw:hover,
+  a:hover > .u-draw,
+  .btn:hover .u-draw {
+    animation: u-draw 650ms var(--ease);
+  }
+}
+
+/* Never break inside this text (e.g. the email address) */
+.nowrap {
+  white-space: nowrap;
+}

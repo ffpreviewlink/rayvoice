@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro"
+    "astro": "astro",
+    "favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
     "astro": "^7.3.8",

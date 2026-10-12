@@ -33,7 +33,7 @@ const year = new Date().getFullYear();
       <nav aria-label="Footer">
         <ul class="footer__nav">
           {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a class="nowrap" href={`mailto:${site.email}`}>{site.email}</a></li>
         </ul>
       </nav>
     </div>

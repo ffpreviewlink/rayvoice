@@ -1,10 +1,9 @@
 ---
-import { Font, getImage } from 'astro:assets';
-import ogSource from '../assets/images/portrait-hero.webp';
+import { Font } from 'astro:assets';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { isPreview, site } from '../data/site';
-import { url } from '../utils/url';
+import { stripBase, url } from '../utils/url';
 import '../styles/global.css';
 
 interface Props {
@@ -15,16 +14,20 @@ interface Props {
   /** Colour of the last section, so the footer seam matches. */
   footerFrom?: string;
   noindex?: boolean;
+  /** Social image path inside public/ (defaults to the shared 1200x630 card). */
+  image?: string;
+  imageAlt?: string;
 }
-const { title, description = site.description, fullTitle = false, footerFrom, noindex = false } = Astro.props;
+const { title, description = site.description, fullTitle = false, footerFrom, noindex = false, image = site.ogImage.path, imageAlt = site.ogImage.alt } = Astro.props;
 
 const pageTitle = fullTitle ? title : `${title} | ${site.name}`;
-// Astro.url.pathname already includes `base`; keep the trailing slash only on the site root.
-const basePath = import.meta.env.BASE_URL;
-const canonical = new URL(Astro.url.pathname === basePath ? basePath : Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site);
+// Canonical = site origin + base + this page's own route (never the homepage for every page).
+// The root keeps its trailing slash ('/rayvoice/'), other routes have none ('/rayvoice/showreels').
+const route = stripBase(Astro.url.pathname).replace(/(.)\/$/, '$1');
+const canonical = new URL(url(route), Astro.site);
 const preview = isPreview(Astro.site);
-const og = await getImage({ src: ogSource, width: 1200, height: 630, format: 'jpg', fit: 'cover', position: 'top' });
-const ogUrl = new URL(og.src, Astro.site);
+// Absolute https URL of the social image, built from `site` + `base` (never a bare '/images/...').
+const ogUrl = new URL(url(image), Astro.site);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -53,7 +56,11 @@ const jsonLd = {
     {preview ? <meta name="robots" content="noindex, nofollow" /> : noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#f6f4ed" />
 
-    <link rel="icon" href={url('/favicon.ico')} sizes="any" />
+    <!-- Icons built from the original character artwork. Regenerate with `npm run favicons`. -->
+    <link rel="icon" href={url('/favicon-32x32.png')} type="image/png" sizes="32x32" />
+    <link rel="icon" href={url('/favicon-16x16.png')} type="image/png" sizes="16x16" />
+    <link rel="icon" href={url('/favicon.ico')} sizes="48x48" />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} sizes="180x180" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -62,9 +69,15 @@ const jsonLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogUrl} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content={site.ogImage.type} />
+    <meta property="og:image:width" content={String(site.ogImage.width)} />
+    <meta property="og:image:height" content={String(site.ogImage.height)} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <Font cssVariable="--font-display" preload={[{ subset: 'latin', style: 'normal' }]} />
     <Font cssVariable="--font-body" preload={[{ subset: 'latin', style: 'normal' }]} />

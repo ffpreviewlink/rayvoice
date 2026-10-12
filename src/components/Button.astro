@@ -26,7 +26,7 @@ const attrs = href ? { href: resolved, ...(external ? { target: '_blank', rel: '
 ---
 
 <Tag class:list={['btn', `btn--${variant}`, `btn--${size}`, className]} {...attrs} {...rest}>
-  <span class="btn__label"><slot /></span>
+  <span class:list={['btn__label', { 'u-draw': variant === 'text' }]}><slot /></span>
   {icon && <Icon name={icon} size={18} />}
 </Tag>
 
@@ -111,7 +111,7 @@ const attrs = href ? { href: resolved, ...(external ? { target: '_blank', rel: '
     transform-origin: bottom;
   }
 
-  /* Text link: a coral highlighter rises behind the label */
+  /* Text link: underline redraw lives in utilities.css (.u-draw) */
   .btn--text {
     --btn-bg: transparent;
     --btn-fg: var(--text);
@@ -124,16 +124,6 @@ const attrs = href ? { href: resolved, ...(external ? { target: '_blank', rel: '
   }
   .btn--text::before {
     display: none;
-  }
-  .btn--text .btn__label {
-    background-image: linear-gradient(var(--coral-500), var(--coral-500));
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 100% 2px;
-    padding-bottom: 0.1em;
-    transition:
-      background-size 380ms var(--ease),
-      color 320ms var(--ease);
   }
 
   @media (hover: hover) {
@@ -153,6 +143,9 @@ const attrs = href ? { href: resolved, ...(external ? { target: '_blank', rel: '
     .btn--secondary:hover::before {
       transform-origin: bottom;
     }
+    .btn--text:hover {
+      color: var(--btn-fg);
+    }
     .btn--primary:hover {
       box-shadow: 0 10px 24px -12px rgb(11 16 34 / 0.55);
     }
@@ -164,13 +157,6 @@ const attrs = href ? { href: resolved, ...(external ? { target: '_blank', rel: '
     }
     .btn:hover :global(.icon--mail) {
       transform: rotate(-8deg) scale(1.1);
-    }
-    .btn--text:hover {
-      color: var(--btn-fg);
-    }
-    .btn--text:hover .btn__label {
-      background-size: 100% 100%;
-      color: var(--navy-900);
     }
   }
 </style>
